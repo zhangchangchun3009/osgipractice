@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Osgipractice
+Bundle-SymbolicName: osgi.dictionary
+Bundle-Version: 1.0.0
+Bundle-Activator: dictionary.Activator
+Export-Package: dictionary.services;uses:="org.osgi.framework,org.eclipse.osgi.framework.console"
+Service-Component: OSGI-INF/*.xml
+Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.osgi.framework.console;version="1.0.0",
+ org.osgi.framework;version="1.3.0",
+ org.osgi.service.component.annotations;version="1.2.0";resolution:="optional",
+ org.osgi.util.tracker;version="1.3.1"
+Automatic-Module-Name: osgipractice
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
