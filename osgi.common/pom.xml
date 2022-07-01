@@ -1,0 +1,64 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>pers.zhangchangchun</groupId>
+    <artifactId>osgipractice</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <packaging>jar</packaging>
+  <artifactId>osgi.common</artifactId>
+  <name>osgi.common</name>
+  <dependencies>
+    <dependency>
+        <groupId>pers.zhangchangchun</groupId>
+        <artifactId>osgi.thirdpartybundels</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+    <dependency>
+        <groupId>pers.zhangchangchun</groupId>
+        <artifactId>osgi.database</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <finalName>osgi.common</finalName>
+    <resources>
+        <resource>
+            <directory>src/main/java</directory>
+            <includes>
+              <include>**/*.properties</include>
+              <include>**/*.xml</include>
+            </includes>
+        </resource>
+
+        <resource>
+            <directory >
+                src/main/resources
+            </directory>
+            <includes >
+             <include>**/*.*</include>
+            </includes>
+        </resource>
+    </resources>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration> 
+                    <archive>
+                        <compress>false</compress>
+                    </archive>
+                </configuration>
+              </execution>
+            </executions>
+        </plugin>
+    </plugins>
+  </build>
+</project>
