@@ -114,7 +114,7 @@ class BeanInitializer {
                 }
             }
             if (!needAutoWired) {
-                changeStatusAndReverseResolve(bean);
+                changeResolvedBeanStatusAndResolveWithReverseRecursion(bean);
                 return;
             } else {
                 resolveFields(bean);
@@ -125,12 +125,12 @@ class BeanInitializer {
         }
     }
 
-    private void changeStatusAndReverseResolve(Object bean) throws ReflectiveOperationException {
+    private void changeResolvedBeanStatusAndResolveWithReverseRecursion(Object bean) throws ReflectiveOperationException {
         Class<?> beanType = bean.getClass();
         resolvedBeans.put(beanType.getName(), bean);
         resolvingBeans.remove(beanType.getName());
         resolvingBean2UnresolvedDependencies.remove(beanType.getName());
-        reverseRecurseDependency(bean);
+        resolveDependencyWithReverseRecursion(bean);
     }
 
     private void resolveFields(Object bean) throws ReflectiveOperationException, NoSuchMethodException {
@@ -162,11 +162,11 @@ class BeanInitializer {
             }
         }
         if (unresolvedFields == null || unresolvedFields.isEmpty()) {//may already cleaned by reverseRecurseDependency process
-            changeStatusAndReverseResolve(bean);
+            changeResolvedBeanStatusAndResolveWithReverseRecursion(bean);
         }
     }
 
-    private void reverseRecurseDependency(Object bean) throws ReflectiveOperationException {
+    private void resolveDependencyWithReverseRecursion(Object bean) throws ReflectiveOperationException {
         for (Entry<String, List<Field>> entry : resolvingBean2UnresolvedDependencies.entrySet()) {
             String resolvingBeanTypeName = entry.getKey();
             Object resolvingBean = resolvingBeans.get(resolvingBeanTypeName);
@@ -187,7 +187,7 @@ class BeanInitializer {
                 }
             }
             if (dependencys.isEmpty()) {
-                changeStatusAndReverseResolve(resolvingBean);
+                changeResolvedBeanStatusAndResolveWithReverseRecursion(resolvingBean);
             }
         }
     }

@@ -21,14 +21,14 @@ public class WebsocketServiceResolver {
 
     private Map<String, Object> pathBeanMapper = new HashMap<String, Object>();
 
-    private BundleContextManager applicationContextManager;
+    private BundleContextManager bundleContextManager;
 
     public WebsocketServiceResolver(String bundleName) {
-        applicationContextManager = BundleContextManager.getContextByBundleName(bundleName);
+        bundleContextManager = BundleContextManager.getContextByBundleName(bundleName);
     }
 
     private void pathResolve() {
-        Collection<?> services = applicationContextManager.getBeansWithAnnotation(WebsocketService.class);
+        Collection<?> services = bundleContextManager.getBeansWithAnnotation(WebsocketService.class);
         for (Object service : services) {
             Class<?> proxyClass = service.getClass();
             Class<?> originClass = null;
