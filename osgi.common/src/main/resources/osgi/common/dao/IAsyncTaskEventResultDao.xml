@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="osgi.common.dao.IAsyncTaskEventResultDao">
+    
+    <select id="getList"  parameterType="osgi.common.vo.AsyncTaskEventResultVO" 
+                resultType="osgi.common.vo.AsyncTaskEventResultVO">
+        select id,
+               task_name as taskName,
+               status,
+               event_type as eventType,
+               start_time as startTime,
+               end_time as endTime,
+               created_by as createdBy,
+               created_time as createdTime
+        from sys_async_task
+        where 1=1
+            <if test="entity.taskName != null">
+            and task_name = #{entity.taskName}
+            </if>
+            <if test="entity.eventType != null">
+            and event_type =  #{entity.eventType}
+            </if>
+            <if test="entity.status != null">
+            and status =  #{entity.status}
+            </if>
+            <if test="entity.startTime != null">
+            and start_time >  #{entity.startTime}
+            </if>
+            <if test="entity.createdBy != null">
+            and created_by =  #{entity.createdBy}
+            </if>
+    </select>
+    
+    <update id="insert"  parameterType="osgi.common.vo.AsyncTaskEventResultVO" >
+        <foreach collection="list" item="item" >
+            insert into sys_async_task(id, task_name, status, event_type, start_time, end_time,
+            created_by,created_time)
+            values(#{item.id},
+                #{item.taskName},#{item.status},#{item.eventType},#{item.startTime},#{item.endTime},
+                #{item.createdBy},now()
+            );
+        </foreach>
+    </update> 
+    
+    <update id="update"  parameterType="osgi.common.vo.AsyncTaskEventResultVO" >
+        <foreach collection="list" item="item" >
+        update sys_async_task
+                <set>
+                <if test="item.status != null">
+                status = #{item.status},
+                </if>
+                <if test="item.startTime != null">
+                start_time = #{item.startTime},
+                </if>
+                <if test="item.endTime != null">
+                end_time = #{item.endTime},
+                </if>
+                </set> 
+         where id = #{item.id};
+        </foreach>
+    </update> 
+    
+    <update id="delete"  parameterType="osgi.common.vo.AsyncTaskEventResultVO" >
+        <foreach collection="list" item="item" >
+	        delete from sys_async_task
+	         where id = #{item.id};
+        </foreach>
+    </update> 
+    
+    
+</mapper>

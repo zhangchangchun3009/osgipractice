@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="osgi.common.dao.IPrivilegeDao">
+
+    
+    <update id="batchInsert"  parameterType="osgi.common.vo.ResourceVO">
+        <foreach collection="list" item="item" >
+            start transaction;
+	        insert into sys_resource(resource_id, module_name, 
+					service_code, service_name, 
+					method_code, method_name,batch_flag) values
+	         (nextval('s_resourceid'),#{item.moduleName},#{item.serviceCode},#{item.serviceName},
+	         #{item.methodCode},#{item.methodName},'1'
+	         )
+	         on duplicate key update service_name = #{item.serviceName}, method_name = #{item.methodName}, batch_flag = '1';
+	         commit;
+         </foreach>
+    </update>
+    
+    
+    <update id="deleteAllInvalid">
+        delete from sys_resource where batch_flag is null;
+        commit;
+        update sys_resource set batch_flag = null;
+    </update>
+    
+    <select id="getRoleList" resultType = "osgi.common.vo.RoleVO">
+        select  r.id, r.role_id as roleId, r.role_name as roleName
+         from sys_role r 
+        where 1=1
+        <if test='entity.roleName != null '>
+        and r.role_name like concat('%', #{entity.roleName} , '%')
+        </if>
+    </select>
+    
+    <select id="getRoleListByUser" parameterType="osgi.common.vo.UserVO"
+        resultType = "osgi.common.vo.RoleVO">
+            SELECT 
+			    r.id, r.role_id as roleId, r.role_name as roleName
+			FROM
+			    sys_user_role ur
+			        INNER JOIN
+			    sys_role r
+			WHERE
+			    ur.role_id = r.role_id
+			    AND ur.user_id = #{entity.userId}
+    </select>
+    
+    <update id ='insertRoleByUser'>
+        insert into sys_user_role(user_id, role_id) values
+            <foreach collection="list" item="item" separator="," >
+            (#{userId},#{item.roleId})
+            </foreach>
+    </update>
+
+    <delete id ='deleteRoleByUser'>
+         <foreach collection="list" item="item"  >
+            delete from  sys_user_role 
+            where user_id = #{userId} 
+            and role_id = #{item.roleId} ;
+         </foreach>
+    </delete>
+    
+    <update id ='insertRole'>
+        insert into sys_role(role_id, role_name, created_by) values
+            <foreach collection="list" item="item" separator="," >
+            (nextval('s_roleid'),#{item.roleName},#{item.createdBy})
+            </foreach>
+    </update>
+    
+    <update id ='deleteRole'>
+        <foreach collection="list" item="item" separator=";" >
+            delete from  sys_role where id = #{item.id}
+        </foreach>
+    </update>
+    
+    <select id="getResourceListByRole" parameterType="osgi.common.vo.RoleVO"
+        resultType = "osgi.common.vo.ResourceVO">
+            SELECT 
+			    r.id,
+			    r.resource_id as resourceId,
+			    r.module_name as moduleName,
+			    r.service_code as serviceCode,
+			    r.service_name as serviceName,
+			    r.method_code as methodCode,
+			    r.method_name as methodName
+			FROM
+			    sys_role_resource rr
+			        INNER JOIN
+			    sys_resource r
+			WHERE
+			    rr.resource_id = r.resource_id
+			    AND rr.role_id = #{entity.roleId}
+			 ORDER BY r.module_name,r.service_code,r.method_code
+    </select>
+    
+    <update id ='insertResourceByRole'>
+        insert into sys_role_resource(role_id, resource_id) values
+            <foreach collection="list" item="item" separator="," >
+            (#{roleId}, #{item.resourceId})
+            </foreach>
+    </update>
+    
+    <update id ='deleteResourceByRole'>
+       <foreach collection="list" item="item" separator=";" >
+       delete from sys_role_resource where role_id = #{roleId} and resource_id = #{item.resourceId}
+       </foreach>
+    </update>
+    
+    <update id ='deleteAllResourceByRole'>
+       delete from sys_role_resource where role_id = #{roleId}
+    </update>
+    
+    <select id="queryResourceList" resultType = "osgi.common.vo.ResourceVO">
+        SELECT 
+             id,
+             resource_id as resourceId,
+             module_name as moduleName,
+             service_code as serviceCode,
+             service_name as serviceName,
+             method_code as methodCode,
+             method_name as methodName
+         FROM
+		    sys_resource
+		 ORDER BY module_name,service_code,method_code
+    </select>
+    
+</mapper>

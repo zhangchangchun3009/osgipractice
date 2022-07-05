@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="osgi.common.dao.IExcelErrorDao">
+    
+    <select id="getList"  parameterType="osgi.common.vo.ExcelErrorVO" resultType="osgi.common.vo.ExcelErrorVO">
+        select id,
+               event_id as eventId,
+               row_index as rowIndex,
+               column_index as columnIndex,
+               message
+        from sys_excel_error
+        where event_id = #{entity.eventId}
+    </select>
+    
+    <update id="insert"  parameterType="osgi.common.vo.ExcelErrorVO" >
+        <foreach collection="list" item="item" >
+            insert into sys_excel_error(event_id, row_index, column_index, message)
+            values(
+                #{item.eventId},#{item.rowIndex},#{item.columnIndex},#{item.message}
+            );
+        </foreach>
+    </update> 
+    
+    <update id="update"  parameterType="osgi.common.vo.ExcelErrorVO" >
+        <foreach collection="list" item="item" >
+        update sys_excel_error
+            set event_id = #{item.eventId},
+                row_index = #{item.rowIndex},
+                column_index = #{item.columnIndex},
+                message = #{item.message}
+         where id = #{item.id};
+        </foreach>
+    </update> 
+    
+    <update id="delete"  parameterType="osgi.common.vo.ExcelErrorVO" >
+        <foreach collection="list" item="item" >
+	        delete from sys_excel_error
+	         where id = #{item.id};
+        </foreach>
+    </update> 
+    
+    
+</mapper>

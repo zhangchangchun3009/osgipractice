@@ -151,8 +151,8 @@
     </dependency>
     
     <dependency>
-        <groupId>javax.xml.ws</groupId>
-        <artifactId>jaxws-api</artifactId>
+        <groupId>javax.inject</groupId>
+        <artifactId>javax.inject</artifactId>
     </dependency>
     
     <dependency>

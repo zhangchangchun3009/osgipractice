@@ -23,19 +23,20 @@ import osgi.common.vo.Response;
 import osgi.common.vo.UserVO;
 import osgi.common.websocket.service.impl.WebsocketServiceResolver;
 
-public class ScmWebSocketServer extends WebSocketServer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScmWebSocketServer.class);
+public class AppWebSocketServer extends WebSocketServer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AppWebSocketServer.class);
 
     private AtomicInteger connectionCount = new AtomicInteger(0);
 
     private ConcurrentHashMap<Integer, WebSocket> connections = new ConcurrentHashMap<>();
 
-    private static WebsocketServiceResolver resolver = new WebsocketServiceResolver();
+    private WebsocketServiceResolver resolver;
 
-    private static ObjectMapper mapper = JacksonUtil.getDefaultObjectMapper();
+    private ObjectMapper mapper = JacksonUtil.getDefaultObjectMapper();
 
-    public ScmWebSocketServer(int port) {
+    public AppWebSocketServer(int port, String bundleName) {
         super(new InetSocketAddress(port));
+        resolver = new WebsocketServiceResolver(bundleName);
         LOGGER.info("websocket Server start at port:" + port);
     }
 

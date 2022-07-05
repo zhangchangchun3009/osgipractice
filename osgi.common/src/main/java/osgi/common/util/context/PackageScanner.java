@@ -1,4 +1,4 @@
-package osgi.common.util;
+package osgi.common.util.context;
 
 import java.io.File;
 import java.io.FileFilter;

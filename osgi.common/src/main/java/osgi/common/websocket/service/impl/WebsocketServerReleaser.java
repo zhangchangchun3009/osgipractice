@@ -2,14 +2,19 @@ package osgi.common.websocket.service.impl;
 
 import java.util.ArrayList;
 
-import osgi.common.websocket.service.ScmWebSocketServer;
+import javax.inject.Named;
 
-public class WebsocketServerReleaser {
+import osgi.common.IBeforeShutDownHandle;
+import osgi.common.websocket.service.AppWebSocketServer;
 
+@Named
+public class WebsocketServerReleaser implements IBeforeShutDownHandle {
+
+    @Override
     public void process() {
-        ArrayList<ScmWebSocketServer> instances = WebsocketServerHolder.get();
+        ArrayList<AppWebSocketServer> instances = WebsocketServerHolder.get();
         if (!instances.isEmpty()) {
-            for (ScmWebSocketServer instance : instances) {
+            for (AppWebSocketServer instance : instances) {
                 try {
                     instance.stop(5000);
                 } catch (InterruptedException e) {
@@ -19,6 +24,7 @@ public class WebsocketServerReleaser {
         }
     }
 
+    @Override
     public int getOrder() {
         return 0;
     }

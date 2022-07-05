@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class MysqlDB {
         }
     }
 
-    public static void registMappers(List<Class<?>> mappers) {
+    public static void registMappers(Collection<Class<?>> mappers) {
         mybatisMappers.addAll(mappers);
         rebuildSqlSessionFactory(mappers);
         for (Class<?> clazz : mappers) {
@@ -78,7 +79,7 @@ public class MysqlDB {
         }
     }
 
-    private static void rebuildSqlSessionFactory(List<Class<?>> mybatisMappers) {
+    private static void rebuildSqlSessionFactory(Collection<Class<?>> mybatisMappers) {
         for (Class<?> clazz : mybatisMappers) {
             configuration.addMapper(clazz);
         }

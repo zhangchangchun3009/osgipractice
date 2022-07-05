@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="osgi.common.dao.IUserDao">
+
+	<resultMap type="osgi.common.vo.UserVO" id="userRoleMap">
+	    <id column="userId" property="userId"/>
+	    <result column="idU" property="id"/>
+	    <result column="userName" property="userName"/>
+	    <result column="password" property="password"/>
+	    <result column="userType" property="userType"/>
+	    <result column="createdByU" property="createdBy"/>
+	    <result column="createdTimeU" property="createdTime"/>
+	    <result column="lastUpdatedByU" property="lastUpdatedBy"/>
+	    <result column="lastUpdatedTimeU" property="lastUpdatedTime"/>
+	    
+	    <collection ofType="osgi.common.vo.RoleVO" property="roles"
+	         javaType="java.util.ArrayList" select="findRoles"  column="userId">
+		    <id column="roleId" property="roleId"/>
+		    <result column="roleName" property="roleName"/>
+	    </collection>
+	
+	</resultMap>
+    
+    <select id="findUser"  parameterType="osgi.common.vo.UserVO"
+        resultMap="userRoleMap">
+        SELECT  u.id as idU,
+                u.user_id as userId,
+                u.user_name as userName,
+                u.password,
+                u.user_type as userType,
+                u.created_by as createdByU,
+                u.created_time as createdTimeU,
+                u.last_updated_by as lastUpdatedByU,
+                u.last_updated_time as lastUpdatedTimeU
+        FROM sys_user u
+		WHERE 1=1
+		     <if test="entity.userId != 0">
+		     and u.user_id = #{entity.userId}
+		     </if>
+		     <if test="entity.userName != null"> 
+		     and u.user_name = #{entity.userName}
+		     </if>
+		     <if test="entity.userType != null"> 
+             and u.user_type = #{entity.userType}
+             </if>
+	    limit 1
+    </select> 
+    
+    <select id="getPagedUserList"  parameterType="osgi.common.vo.UserVO"
+        resultMap="userRoleMap">
+        SELECT  u.id as idU,
+                u.user_id as userId,
+                u.user_name as userName,
+                u.user_type as userType,
+                u.created_by as createdByU,
+                u.created_time as createdTimeU,
+                u.last_updated_by as lastUpdatedByU,
+                u.last_updated_time as lastUpdatedTimeU
+        FROM sys_user u
+        WHERE 1=1
+             <if test="entity.userId != 0">
+             and u.user_id = #{entity.userId}
+             </if>
+             <if test="entity.userName != null"> 
+             and u.user_name like concat(#{entity.userName},'%')
+             </if>
+    </select> 
+    
+    <select id="findRoles" resultType = "osgi.common.vo.RoleVO">
+        select r.role_id as roleId,
+                r.role_name as roleName
+                from sys_user_role ur inner join sys_role r on ur.role_id = r.role_id
+                where ur.user_id = #{userId}
+    </select>
+    
+    <select id="hasPrivilege"  resultType ="int">
+		SELECT 
+		    count(1)
+		FROM
+		    sys_user_role ur
+		        INNER JOIN
+		    sys_role_resource rr
+		        INNER JOIN
+		    sys_resource r
+		WHERE
+		    ur.role_id = rr.role_id
+	        AND ur.user_id = #{user.userId}
+	        AND rr.resource_id = r.resource_id
+	        <if test="resource.moduleName != null">
+	        AND r.module_name = #{resource.moduleName}
+	        </if>
+	        AND r.service_code = #{resource.serviceCode}
+	        AND r.method_code = #{resource.methodCode} 
+    </select>
+    
+    <select id="generateUserId" resultType="int">
+        select nextval('s_userid')
+    </select>
+    
+    <insert id="insert" parameterType="osgi.common.vo.UserVO">
+        insert into sys_user(user_id,user_name,password,user_type,created_by,created_time)values(
+        #{user.userId},#{user.userName},#{user.password},#{user.userType},'-1',now())
+    </insert>
+    
+    <delete id="delete" parameterType="osgi.common.vo.UserVO">
+        delete from sys_user where id = #{entity.id}
+    </delete>
+
+</mapper>

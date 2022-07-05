@@ -10,19 +10,25 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import osgi.common.util.ApplicationContextManager;
+import osgi.common.util.context.BundleContextManager;
 import osgi.common.websocket.service.interfaces.EndPoint;
 import osgi.common.websocket.service.interfaces.MsgHandle;
 import osgi.common.websocket.service.interfaces.WebsocketService;
 
 public class WebsocketServiceResolver {
 
-    private static Map<String, Map<String, Method>> pathMapper = new HashMap<String, Map<String, Method>>();
+    private Map<String, Map<String, Method>> pathMapper = new HashMap<String, Map<String, Method>>();
 
-    private static Map<String, Object> pathBeanMapper = new HashMap<String, Object>();
+    private Map<String, Object> pathBeanMapper = new HashMap<String, Object>();
+
+    private BundleContextManager applicationContextManager;
+
+    public WebsocketServiceResolver(String bundleName) {
+        applicationContextManager = BundleContextManager.getContextByBundleName(bundleName);
+    }
 
     private void pathResolve() {
-        Collection<?> services = ApplicationContextManager.getBeansWithAnnotation(WebsocketService.class);
+        Collection<?> services = applicationContextManager.getBeansWithAnnotation(WebsocketService.class);
         for (Object service : services) {
             Class<?> proxyClass = service.getClass();
             Class<?> originClass = null;
