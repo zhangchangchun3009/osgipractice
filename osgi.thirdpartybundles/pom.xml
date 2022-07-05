@@ -7,8 +7,8 @@
     <artifactId>osgipractice</artifactId>
     <version>1.0.0</version>
   </parent>
-  <artifactId>osgi.thirdpartybundels</artifactId>
-  <name>osgi.thirdpartybundels</name>
+  <artifactId>osgi.thirdpartybundles</artifactId>
+  <name>osgi.thirdpartybundles</name>
   <url>http://maven.apache.org</url>
   <packaging>bundle</packaging>
   <properties>

@@ -25,7 +25,7 @@ import javax.inject.Named;
  * <p> if the value of @Named is set, it will be used as the bean id instead of the default class name. 
  * (id self define is meaningless now because this container supports singleton bean only and doesn't support primary bean and @Qualified annotation).
  * <p> keep the relationship of your bean dependency simple.
- * <p> doesn't use setter and getter and constructor with arguments, so it's a bit slower.
+ * <p> doesn't use setter and getter and constructor with arguments, so it's a bit slow.
  * @author zhangchangchun
  * @Date 2022年7月4日
  */
@@ -125,7 +125,8 @@ class BeanInitializer {
         }
     }
 
-    private void changeResolvedBeanStatusAndResolveWithReverseRecursion(Object bean) throws ReflectiveOperationException {
+    private void changeResolvedBeanStatusAndResolveWithReverseRecursion(Object bean)
+            throws ReflectiveOperationException {
         Class<?> beanType = bean.getClass();
         resolvedBeans.put(beanType.getName(), bean);
         resolvingBeans.remove(beanType.getName());

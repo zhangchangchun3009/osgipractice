@@ -20,9 +20,9 @@
   
    <modules>
     <module>osgi.dictionary</module> 
-<!--    <module>osgi.common</module> --> 
+    <module>osgi.common</module> 
     <module>osgi.database</module>
-    <module>osgi.thirdpartybundels</module>
+    <module>osgi.thirdpartybundles</module>
   </modules>
     
     

@@ -3,7 +3,7 @@ package osgi.common.websocket.service.impl;
 import javax.inject.Named;
 
 import osgi.common.Activator;
-import osgi.common.IAfterStartUpHandle;
+import osgi.common.funcinterfaces.IAfterStartUpHandle;
 import osgi.common.websocket.service.AppWebSocketServer;
 
 @Named

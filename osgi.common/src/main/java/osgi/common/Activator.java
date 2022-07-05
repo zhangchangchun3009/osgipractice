@@ -8,6 +8,8 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 import osgi.common.dao.ISequenceDao;
+import osgi.common.funcinterfaces.IAfterStartUpHandle;
+import osgi.common.funcinterfaces.IBeforeShutDownHandle;
 import osgi.common.services.CA;
 import osgi.common.services.CB;
 import osgi.common.services.CC;

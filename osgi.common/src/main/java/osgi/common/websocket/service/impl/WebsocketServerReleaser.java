@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.inject.Named;
 
-import osgi.common.IBeforeShutDownHandle;
+import osgi.common.funcinterfaces.IBeforeShutDownHandle;
 import osgi.common.websocket.service.AppWebSocketServer;
 
 @Named

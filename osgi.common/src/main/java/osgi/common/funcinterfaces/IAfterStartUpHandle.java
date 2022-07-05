@@ -1,5 +1,5 @@
 
-package osgi.common;
+package osgi.common.funcinterfaces;
 
 /**
  * after bundle start up

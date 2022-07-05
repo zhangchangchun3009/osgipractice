@@ -11,7 +11,7 @@
   <dependencies>
     <dependency>
         <groupId>pers.zhangchangchun</groupId>
-        <artifactId>osgi.thirdpartybundels</artifactId>
+        <artifactId>osgi.thirdpartybundles</artifactId>
         <version>1.0.0</version>
     </dependency>
     <dependency>
