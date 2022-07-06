@@ -5,9 +5,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import osgi.common.Activator;
 import osgi.common.dao.ISequenceDao;
@@ -28,8 +30,11 @@ public class TestContext {
             System.out.println(sequenceDao.getNextValue("s_common"));
             ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(8,
                     new ThreadPoolExecutor.AbortPolicy());
+            ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(8, 16, 300, TimeUnit.SECONDS,
+                    new LinkedBlockingDeque<>(3000), new ThreadPoolExecutor.AbortPolicy());
             Map<String, Object> requiredOuterBeans = new HashMap<>();
             requiredOuterBeans.put("scheduledThreadPoolExecutor", scheduledExecutorService);
+            requiredOuterBeans.put("threadPoolExecutor", threadPoolExecutor);
             mappers.forEach(mapperInterface -> {
                 requiredOuterBeans.put(mapperInterface.getName(), MysqlDB.getMapper(mapperInterface));
             });
