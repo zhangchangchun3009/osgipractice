@@ -1,6 +1,3 @@
-/*
- * Copyright 2021-2029 tiangong All Rights Reserved
- */
 package osgi.common.util.context;
 
 import java.io.IOException;
@@ -9,6 +6,7 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -25,7 +23,7 @@ public class BundleContextManager {
      * <p> The class Mapper of classes in the BASE_PACKAGE. 
      * <p> the key is class name,value is java class type.
      * */
-    private final LinkedHashMap<String, Class<?>> classMapper = new LinkedHashMap<>();
+    final LinkedHashMap<String, Class<?>> classMapper = new LinkedHashMap<>();
 
     /**
      * classify scanned classes by interface name
@@ -40,26 +38,35 @@ public class BundleContextManager {
     /**
      * bean container, the key is unique id,value is bean
      */
-    private final LinkedHashMap<String, Object> beanMap = new LinkedHashMap<>();
+    final LinkedHashMap<String, Object> beanMap = new LinkedHashMap<>();
 
     /**
      * key is bundle name, value is context.
      */
-    private static final Hashtable<String, BundleContextManager> instanceMap = new Hashtable<>();
+    static final Hashtable<String, BundleContextManager> instanceMap = new Hashtable<>();
 
-    public BundleContextManager(String basePackage) {
+    /**
+     * @param basePackage
+     * @param requiredOuterBeans @Nullable. if there are any required beans, transport them.
+     */
+    public BundleContextManager(String basePackage, Map<String, Object> requiredOuterBeans) {
         this.BASE_PACKAGE = basePackage != null ? basePackage : BASE_PACKAGE;
         scanPackage();
-        registBeans();
+        registOuterBeans(requiredOuterBeans);
+        registNativeBeans();
     }
 
-    private void registBeans() {
-        new BeanInitializer(this).registBeans();
+    private void registOuterBeans(Map<String, Object> requiredOuterBeans) {
+        beanMap.putAll(requiredOuterBeans);
+    }
+
+    private void registNativeBeans() {
+        new BeanInitializer(this).registLocalBeans();
     }
 
     private void scanPackage() {
-        PackageScanner scanner = new PackageScanner(BundleContextManager.class.getClassLoader(), BASE_PACKAGE,
-                true, null, null);
+        PackageScanner scanner = new PackageScanner(BundleContextManager.class.getClassLoader(), BASE_PACKAGE, true,
+                null, null);
         try {
             for (Class<?> class1 : scanner.doScanAllClasses()) {
                 classMapper.put(class1.getName(), class1);
@@ -111,7 +118,7 @@ public class BundleContextManager {
         return instanceMap.get(bundleName);
     }
 
-    void registBean(String beanId, Object bean) {
+    public void registBean(String beanId, Object bean) {
         beanMap.put(beanId, bean);
     }
 

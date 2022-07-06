@@ -1,4 +1,4 @@
-package osgi.common.services;
+package osgi.common.services.test;
 
 import javax.inject.Inject;
 import javax.inject.Named;
