@@ -78,9 +78,6 @@ class BeanInitializer {
                 for (Entry<String, Object> entry : autoConstructBeans.entrySet()) {
                     Object bean = entry.getValue();
                     String beanId = entry.getKey();
-                    if (bundleContextManager.getBeanOfId(beanId) != null) {
-                        throw new BeanInitializeException("duplicate bean id: " + beanId);
-                    }
                     bundleContextManager.registBean(beanId, bean);
                 }
             }

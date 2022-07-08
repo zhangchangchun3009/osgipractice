@@ -23,6 +23,7 @@
     <module>osgi.common</module> 
     <module>osgi.database</module>
     <module>osgi.thirdpartybundles</module>
+    <module>osgi.web</module>
   </modules>
     
     
