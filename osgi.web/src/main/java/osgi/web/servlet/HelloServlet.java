@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dictionary.services.DictionaryService;
+import osgi.web.Activator;
+
 /**
  * Hello world!
  *
@@ -16,6 +19,10 @@ public class HelloServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().write("HELLO");
+        DictionaryService dictionaryService = (DictionaryService) Activator.bundleServices
+                .get(DictionaryService.class.getName());
+        String word = req.getParameter("word");
+        boolean res = dictionaryService.check(word);
+        resp.getWriter().write(res ? "'" + word + "' exists" : "'" + word + "' doesn't exist");
     }
 }

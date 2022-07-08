@@ -14,5 +14,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
+    <dependency>
+        <groupId>pers.zhangchangchun</groupId>
+        <artifactId>osgi.dictionary</artifactId>
+        <version>1.0.0</version>
+    </dependency>
   </dependencies>
 </project>
